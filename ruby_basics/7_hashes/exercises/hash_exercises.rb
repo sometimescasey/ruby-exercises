@@ -10,43 +10,43 @@ def create_favorite_hash(color, number)
 
 end
 
-def favorite_color(favorite_list)
+def favorite_color(favorite_hash)
   # return the value of the color key
-  return favorite_list[:color]
+  return favorite_hash[:color]
 end
 
-def favorite_number(favorite_list)
+def favorite_number(favorite_hash)
   # use #fetch to return the value of the number key or 42 if the key is not found
-  favorite_list.fetch(:number, 42)
+  favorite_hash.fetch(:number, 42)
 end
 
-def update_favorite_movie(favorite_list, movie)
+def update_favorite_movie(favorite_hash, movie)
   # Step 1: add/update the key of movie (as a symbol)
-  favorite_list[:movie] = movie
+  favorite_hash[:movie] = movie
 
   # Step 2: return the hash (because Step 1 returns the value of the movie key)
-  favorite_list
+  favorite_hash
 end
 
-def remove_favorite_number(favorite_list)
+def remove_favorite_number(favorite_hash)
   # Step 1: delete the number data
-  favorite_list.delete(:number)
+  favorite_hash.delete(:number)
 
   # Step 2: return the hash (because Step 1 returns the value of the number key)
-  favorite_list
+  favorite_hash
 end
 
-def favorite_categories(favorite_list)
-  # return the keys of favorite_list
-  favorite_list.keys
+def favorite_categories(favorite_hash)
+  # return the keys of favorite_hash
+  favorite_hash.keys
 end
 
-def favorite_items(favorite_list)
-  # return the values of favorite_list
-  favorite_list.values
+def favorite_items(favorite_hash)
+  # return the values of favorite_hash
+  favorite_hash.values
 end
 
-def merge_favorites(original_list, additional_list)
-  # merge the two hashes: original_list and additional_list
-  return original_list.merge(additional_list)
+def merge_favorites(original_hash, additional_hash)
+  # merge the two hashes: original_hash and additional_hash
+  return original_hash.merge(additional_hash)
 end
