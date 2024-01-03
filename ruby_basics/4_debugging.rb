@@ -1,3 +1,5 @@
+
+
 def isogram?(string)
   original_length = string.length
   string_array = string.downcase.split
@@ -9,4 +11,4 @@ def isogram?(string)
   original_length == unique_length
 end
 
-puts isogram?('hhey')
+puts isogram?('Odifffn')
