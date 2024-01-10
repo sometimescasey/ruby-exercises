@@ -2,7 +2,7 @@ def bubble_sort(list)
   iteration = 0
   while iteration < list.length
     swapped = false
-    (0..list.length - 2 - iteration).to_a.each do |i|
+    (0..list.length - 2 - iteration).to_a.each do |i| # On the i-th iteration, the i-last items are sorted
       next unless list[i] > list[i + 1]
 
       big = list[i]
@@ -10,7 +10,7 @@ def bubble_sort(list)
       list[i + 1] = big
       swapped = true
     end
-    break if swapped == false
+    break if swapped == false # If a swap is not made during an iteration, the list is sorted
 
     iteration += 1
   end
