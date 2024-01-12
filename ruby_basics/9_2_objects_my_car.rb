@@ -34,6 +34,10 @@ class Vehicle
     @speed = 0
   end
 
+  def show_age
+    puts "This vehicle is #{age} years old."
+  end
+
   def self.calculate_gas_mileage(gallons, miles)
     "This car gets #{miles / gallons} mpg"
   end
@@ -52,6 +56,12 @@ class Vehicle
 
   def speedometer
     puts self.speed > 0 ? "You are driving at #{self.speed} mph." : 'You are not moving at the moment.'
+  end
+
+  private
+
+  def age
+    Time.now.year - year
   end
 end
 
@@ -106,6 +116,7 @@ tesla.spray_paint('blue')
 puts tesla.color
 puts MyCar.calculate_gas_mileage(1, 100)
 puts tesla
+tesla.show_age
 
 semi = MyTruck.new(2023, 'Tesla Semi', 'Pepsi')
 semi.speed_up(200)
@@ -121,8 +132,17 @@ puts semi.freight
 puts semi
 semi.switch_to_winter_tires
 semi.switch_to_summer_tires
+semi.show_age
 
 bike = Bicycle.new
 bike.switch_to_winter_tires
 bike.switch_to_summer_tires
 puts bike
+
+puts Vehicle.ancestors
+puts "\n"
+puts MyCar.ancestors
+puts "\n"
+puts MyTruck.ancestors
+puts "\n"
+puts Bicycle.ancestors
