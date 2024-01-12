@@ -1,12 +1,16 @@
-class MyCar
-  attr_accessor :speed, :color
-  attr_reader :year
+class Vehicle
+  attr_accessor :speed
+  attr_reader :year, :model, :wheels
 
-  def initialize(year, color, model)
+  def initialize(wheels, year, model)
+    @wheels = wheels
     @year = year
-    @color = color
     @model = model
     @speed = 0
+  end
+
+  def self.calculate_gas_mileage(gallons, miles)
+    "This car gets #{miles / gallons} mpg"
   end
 
   def speed_up(change)
@@ -24,13 +28,48 @@ class MyCar
   def speedometer
     puts self.speed > 0 ? "You are driving at #{self.speed} mph." : 'You are not moving at the moment.'
   end
+end
+
+class MyTruck < Vehicle
+  WHEELS = 18
+  attr_accessor :freight
+
+  def initialize(year, model, freight)
+    super(WHEELS, year, model)
+    @freight = freight
+  end
+
+  def load(new_freight)
+    self.freight = new_freight
+    puts "You have now loaded #{freight} into the truck."
+  end
+
+  def to_s
+    "This truck is a #{year} #{model}. It is hauling #{freight}. Its current speed is #{speed}"
+  end
+end
+
+class MyCar < Vehicle
+  attr_accessor :color
+
+  WHEELS = 4
+
+  def initialize(year, model, color)
+    super(WHEELS, year, model)
+    @color = color
+    @speed = 0
+  end
+
+  def to_s
+    "This lovely vehicle here is a #{year} #{model} in #{color} finish. Its current speed is #{speed}"
+  end
 
   def spray_paint(color)
     self.color = color
   end
 end
 
-tesla = MyCar.new(2024, 'red', 'Model Y')
+tesla = MyCar.new(2024, 'Model Y', 'red')
 tesla.speed_up(200)
 tesla.speedometer
 tesla.brake(100)
@@ -40,3 +79,18 @@ tesla.speedometer
 puts tesla.year
 tesla.spray_paint('blue')
 puts tesla.color
+puts MyCar.calculate_gas_mileage(1, 100)
+puts tesla
+
+semi = MyTruck.new(2023, 'Tesla Semi', 'Pepsi')
+semi.speed_up(200)
+semi.speedometer
+semi.brake(100)
+semi.speedometer
+semi.turn_off
+semi.speedometer
+puts semi.year
+puts semi.freight
+semi.load('Coke')
+puts semi.freight
+puts semi
