@@ -7,7 +7,24 @@
 # v1: x goes first
 
 # class Board
-# has 9 Squares
+class Board
+  attr_reader :map
+
+  def initialize
+    @map = (1..9).to_a.each_with_object({}) { |n, hash| hash[n] = nil }
+  end
+end
+
+board = Board.new
+p board
+# Board has turn: boolean
+
+# has 9 "Squares" - store them in a hash # can get x_list, o_list from this
+# don't check for victory until 5 turns have been played
+# draw board function
+
+# play(n)
+# Board keeps track of the turn and checks if already full
 
 # X = x
 # O = o
