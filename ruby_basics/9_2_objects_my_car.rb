@@ -1,6 +1,31 @@
+module TiresReplaceable
+  def switch_to_winter_tires
+    puts "You have switched all #{@wheels} tires to winter tires. This will keep you safe on the road when it snows!"
+  end
+
+  def switch_to_summer_tires
+    puts "You have switched all #{@wheels} tires to summer tires. This will reduce unnecessary wear on your expensive winter tires."
+  end
+end
+
+class Bicycle
+  def initialize
+    @wheels = 2
+    puts 'You just bought a new bike.'
+  end
+
+  include TiresReplaceable
+
+  def to_s
+    "This is a bike. Don't forget your helmet!"
+  end
+end
+
 class Vehicle
   attr_accessor :speed
   attr_reader :year, :model, :wheels
+
+  include TiresReplaceable
 
   def initialize(wheels, year, model)
     @wheels = wheels
@@ -94,3 +119,10 @@ puts semi.freight
 semi.load('Coke')
 puts semi.freight
 puts semi
+semi.switch_to_winter_tires
+semi.switch_to_summer_tires
+
+bike = Bicycle.new
+bike.switch_to_winter_tires
+bike.switch_to_summer_tires
+puts bike
