@@ -1,14 +1,30 @@
-# board needs 9 squares
-# win conditions: 3 cols, 3 rows, 2 diags. code this once and use for both x and o
-# each player needs to be able to play
-# play(square, from 1-9)
-# if empty, fill it
-# if filled, reject and allow user to try again
-# v1: x goes first
+# frozen_string_literal: true
 
-# class Board
+# Class containing everything needed for a tic-tac-toe board.
 class Board
-  attr_reader :grid
+  def initialize
+    @grid = (1..9).to_a.each_with_object({}) { |n, hash| hash[n] = nil }
+    @turns = 0
+    @turn_symbol = 'o'
+  end
+
+  def run_game
+    puts "Enter 'help' for help.\n"
+
+    win = false
+    until win || @turns == 9
+      @turn_symbol = (@turn_symbol == 'x' ? 'o' : 'x')
+      win = prompt_for_turn
+      @turns += 1
+    end
+
+    print_board
+    puts win ? "#{@turn_symbol} has won" : "It's a draw"
+  end
+
+  private
+
+  attr_accessor :grid, :turns, :turn_symbol
 
   WIN_CONDITIONS = [
     [1, 2, 3],
@@ -21,61 +37,49 @@ class Board
     [3, 5, 7]
   ].freeze
 
-  def initialize
-    @grid = (1..9).to_a.each_with_object({}) { |n, hash| hash[n] = nil }
+  def collect_move
+    print "\nPlayer #{turn_symbol} - make your move (1 to 9): "
+    gets.chomp
+  end
+
+  def handle_move(number)
+    # Returns true if the move was successful, false otherwise.
+    if (1..9).to_a.include?(number)
+      true if fill_square(number)
+    else
+      puts 'That is not a valid entry.'
+      false
+    end
   end
 
   # rubocop:disable Metrics/MethodLength
-  def prompt_for_turn(symbol)
-    # Say "It's player X's turn"
-    # Prompt user for which square to play
-    # Enter a square from 1 to 9, or type 'help' to get help.
-
-    # The squares are arranged as follows:
-    # [1 2 3]
-    # [4 5 6]
-    # [7 8 9]
-
+  def prompt_for_turn
+    print_board
     square_played = false
 
     until square_played
-
-      print "Player #{symbol} - enter the square number (1 to 9) that you wish to play: "
-      number = gets.chomp
-
-      # temp for debug
-      # number = '2'
+      number = collect_move
 
       if number.downcase.strip == 'help'
-        puts 'TODO replace with help text'
+        print_help
         next
       else
         number = number.to_i
       end
 
-      if (1..9).to_a.include?(number)
-        puts ''
-        played = play_square(symbol, number)
-        if played
-          square_played = true
-          check_for_win(symbol)
-        end
-      else
-        puts 'That is not a valid entry.'
-      end
+      square_played = handle_move(number)
     end
-
-    check_for_win(symbol)
+    check_for_win(turn_symbol)
   end
   # rubocop:enable Metrics/MethodLength
 
-  def play_square(symbol, number)
-    # Check if the square is free
+  def fill_square(number)
+    # Returns true and fills the square if it's empty, false otherwise.
     if grid.key?(number) && grid[number].nil?
-      grid[number] = symbol
+      grid[number] = turn_symbol
       true
     else
-      puts "Square #{number} is already occupied, please pick a different one."
+      puts "Square #{number} is occupied, pick another."
       false
     end
   end
@@ -91,60 +95,24 @@ class Board
   end
 
   def print_board
-    print_row([1, 2, 3])
-    print_row([4, 5, 6])
-    print_row([7, 8, 9])
+    print "\n"
+    [
+      [1, 2, 3],
+      [4, 5, 6],
+      [7, 8, 9]
+    ].each { |r| print_row(r) }
     print "\n"
   end
 
-  private # TODO: move everything here
-
-  attr_writer :grid
+  def print_help
+    puts "\nThe squares are numbered as follows:"
+    puts '[1 2 3]'
+    puts '[4 5 6]'
+    puts '[7 8 9]'
+    puts 'The game ends automatically if a player wins, or if there is a draw.'
+    puts "A player wins by getting 3 of their symbol in a line (a row, a column, or a diagonal).\n"
+  end
 end
 
 board = Board.new
-symbol = 'o'
-win = false
-
-turns = 0
-until win || turns == 9
-  symbol = symbol == 'x' ? 'o' : 'x'
-  win = board.prompt_for_turn(symbol)
-  board.print_board
-  turns += 1
-end
-
-puts win ? "#{symbol} has won" : "It's a draw"
-
-# TODO: draw case
-
-# Board has turn: boolean
-
-# has 9 "Squares" - store them in a hash # can get x_list, o_list from this
-# don't check for victory until 5 turns have been played
-# draw board function
-
-# play(n)
-# Board keeps track of the turn and checks if already full
-
-# X = x
-# O = o
-# square.symbol = X
-
-# Board keeps a list of filled squares by number; i.e. x_fill = [1,3,4]
-# x - x  1 2 3
-# - x -  4 5 6
-# - - -  7 8 9
-
-# Keep a set of win conditions:
-# [1,2,3]
-# [4,5,6]
-# [7,8,9]
-# [1,4,7]
-# [2,5,8]
-# [3,6,9]
-# [1,5,9]
-# [3,5,7]
-
-# If one of these conditions is ever found in a list after a play, that player wins
-# After 9 plays, if nobody has won, it must be a draw
+board.run_game
