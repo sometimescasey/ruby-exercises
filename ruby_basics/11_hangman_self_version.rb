@@ -87,8 +87,7 @@ class Hangman
   end
 
   def play_game
-    # word = dictionary.sample
-    self.word = 'under whelmed'
+    self.word = dictionary.sample
     set_guessed
     tried_whole_word = false
 
