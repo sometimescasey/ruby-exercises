@@ -22,6 +22,7 @@ class Hangman
   def dict_to_list(filepath)
     # Read a dictionary from a file to a list of strings.
     # One word or phrase per line.
+    # Non a-z characters will be stripped.
     f = File.open(filepath)
     phrase_list = []
     while (file_line = f.gets)
@@ -35,7 +36,11 @@ class Hangman
   def clean_line(line)
     # Only accept alphabetical characters, and lowercase the string.
     only_char = line.gsub(/[^a-zA-Z]+/, '')
-    only_char.length.positive? ? line.gsub(/[^a-zA-Z\s]+/, '').downcase : nil
+    char_and_spaces = line.gsub(/[^a-zA-Z\s]+/, '')
+
+    return char_and_spaces.downcase if only_char.length.positive? && char_and_spaces == line.chomp
+
+    nil
   end
 
   def show_dict
@@ -123,7 +128,6 @@ class Hangman
 end
 
 hangman = Hangman.new
-hangman.show_dict
 hangman.play_game
 
 # TODOs
