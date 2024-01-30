@@ -129,11 +129,12 @@ hangman.play_game
 
 # TODOs
 
-# Allow user to guess the entire word
-# End game if the entire word guess is wrong
 # Block guessing the same letter again
-# Keep track of bad guesses
 # Draw hangman
 # End game when entire man is drawn
 
 # spaces are already "guessed" at the start - done
+# Allow user to guess the entire word - done
+# End game if the entire word guess is wrong - done
+# Keep track of bad guesses - done
+# allow max number of bad guesses - done
