@@ -7,12 +7,16 @@ DEFAULT_DICT = './casey_hangman_dict.txt'.freeze
 # DEFAULT_DICT = './ruby_basics/casey_hangman_dict.txt'.freeze
 
 class Hangman
-  attr_reader :dictionary
-  attr_accessor :guessed
+  attr_reader :dictionary, :max_errors
+  attr_accessor :guessed, :word, :lost, :errors
 
   def initialize(filepath = DEFAULT_DICT)
     @dictionary = dict_to_list(filepath)
+    @word = nil
     @guessed = nil
+    @lost = false
+    @errors = 0
+    @max_errors = 3
   end
 
   def dict_to_list(filepath)
@@ -47,33 +51,75 @@ class Hangman
     print "\n"
   end
 
+  def do_guess(letter)
+    # Go through word and fill in
+    hit = false
+    guessed.each_with_index do |_char, i|
+      if letter == word[i]
+        guessed[i] = letter
+        hit = true
+      end
+    end
+    hit
+  end
+
+  def set_guessed
+    self.guessed = word.chars.map { |char| char == ' ' ? char : nil }
+  end
+
+  def guess_whole_word(whole_word_guess)
+    whole_word_guess == word
+  end
+
+  def game_is_over
+    self.lost = true if errors > max_errors
+    guessed.join == word or lost == true
+  end
+
+  def receive_whole_word
+    puts 'Your guess is: '
+    whole_word_guess = gets.chomp
+    if whole_word_guess == word
+      self.guessed = word.chars
+    else
+      self.lost = true
+    end
+  end
+
   def play_game
     # word = dictionary.sample
-    word = 'underwhelmed'
-    self.guessed = Array.new(word.length, nil)
+    self.word = 'under whelmed'
+    set_guessed
+    tried_whole_word = false
 
-    while guessed.join != word
-      hit = false
-      puts 'Guess a letter: '
+    until game_is_over
+      puts 'Guess a letter, or enter 0 to guess the whole word: '
       letter = gets.chomp.downcase
-      # letter = 'u'
-      if letter.length == 1 && clean_line(letter) == letter
-        # Go through word and fill in
-        guessed.each_with_index do |_char, i|
-          if letter == word[i]
-            guessed[i] = letter
-            hit = true
-          end
-        end
+      # letter = 'b'
+      if letter == '0'
+        receive_whole_word
+        tried_whole_word = true
+      elsif letter.length == 1 && clean_line(letter) == letter
+        hit = do_guess(letter)
       else
         puts 'Please enter a single letter between a-z.'
         next
       end
-      print "There was no #{letter}\n" unless hit
+
+      unless hit || tried_whole_word
+        print "There was no #{letter}\n"
+        self.errors += 1
+      end
+
       print_guesses
     end
 
-    puts 'You win!'
+    if lost
+      puts "The answer was #{word}\n"
+      puts 'You lose :('
+    else
+      puts 'You win!'
+    end
   end
 end
 
@@ -84,7 +130,10 @@ hangman.play_game
 # TODOs
 
 # Allow user to guess the entire word
+# End game if the entire word guess is wrong
 # Block guessing the same letter again
 # Keep track of bad guesses
 # Draw hangman
 # End game when entire man is drawn
+
+# spaces are already "guessed" at the start - done
